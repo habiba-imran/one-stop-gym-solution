@@ -1,0 +1,8 @@
+[build]
+  publish = "build/web"
+  command = ""  # no build command since we already built locally
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
