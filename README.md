@@ -1,16 +1,26 @@
-# one_stop_gym
+# One Stop Gym Solution - Landing App 🏋️‍♂️
 
-A new Flutter project.
+A modern, responsive landing page built with **Flutter** and **Supabase** to manage gym waitlists. This project was completed within a 48-hour challenge.
 
-## Getting Started
+## 🚀 Features
+* **Premium UI:** Glassmorphic design with atmospheric mesh backgrounds and smooth entrance animations.
+* **Responsive Layout:** Fully optimized for Mobile, Tablet, and Desktop views.
+* **Waitlist Management:** Secure email capture system integrated with Supabase.
+* **Real-time Validation:** Client-side email regex validation and server-side uniqueness checks.
+* **Timezone Optimized:** Database configured for Pakistan Standard Time (PKT).
 
-This project is a starting point for a Flutter application.
+## 🛠 Tech Stack
+* **Frontend:** Flutter (v3.x)
+* **Backend:** Supabase (PostgreSQL)
+* **Security:** Row Level Security (RLS) policies to protect user privacy.
 
-A few resources to get you started if this is your first Flutter project:
+## 🛡 Database Security (RLS)
+The project uses PostgreSQL Row Level Security to ensure data privacy:
+- **Insert Policy:** Allows anonymous users to join the waitlist.
+- **Select Policy:** Restricted to prevent users from reading other people's data.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## ⚙️ Setup Instructions
+1. Clone the repo: `git clone <https://github.com/habiba-imran/one-stop-gym-solution>`
+2. Install dependencies: `flutter pub get`
+3. Run the app: `flutter run`
