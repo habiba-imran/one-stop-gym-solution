@@ -7,10 +7,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
-  url: 'https://lpidfsqqxgclqpxuekzw.supabase.co',
-  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwaWRmc3FxeGdjbHFweHVla3p3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MzMyMjEsImV4cCI6MjA4NDMwOTIyMX0.bmlz29GqrdtAcsMIuYiOF5EFITnyLpprM-AtL-bZ__Q',
-);
-
+    url: 'https://lpidfsqqxgclqpxuekzw.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwaWRmc3FxeGdjbHFweHVla3p3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MzMyMjEsImV4cCI6MjA4NDMwOTIyMX0.bmlz29GqrdtAcsMIuYiOF5EFITnyLpprM-AtL-bZ__Q',
+  );
 
   runApp(const MyApp());
 }
@@ -123,7 +123,7 @@ class _LandingPageState extends State<LandingPage> {
       if (!mounted) return;
       _emailController.clear();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You’re in! Welcome to the squad.')),
+        const SnackBar(content: Text("You're in! Welcome to the squad.")),
       );
     } on PostgrestException catch (e) {
       if (!mounted) return;
@@ -209,7 +209,7 @@ class _LandingPageState extends State<LandingPage> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email can’t be empty';
+      return "Email can't be empty";
     }
     final emailRegex = RegExp(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,}$');
     if (!emailRegex.hasMatch(value.trim())) {
@@ -292,7 +292,6 @@ class _LandingPageState extends State<LandingPage> {
                           SizedBox(height: size.height * 0.06),
                           const FeaturesSection(),
                           SizedBox(height: size.height * 0.06),
-                          // Center CTA for tablets / large screens
                           Center(
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 640),
@@ -458,7 +457,7 @@ class FeaturesSection extends StatelessWidget {
   }
 }
 
-class FeatureCard extends StatelessWidget {
+class FeatureCard extends StatefulWidget {
   final String title;
   final String caption;
   final IconData icon;
@@ -473,43 +472,124 @@ class FeatureCard extends StatelessWidget {
   });
 
   @override
+  State<FeatureCard> createState() => _FeatureCardState();
+}
+
+class _FeatureCardState extends State<FeatureCard> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedScale(
+        scale: _isHovered ? 1.02 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white10, width: 0.5),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(14),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  color: accent.withOpacity(0.16),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(icon, color: accent, size: 26),
-              ),
-              const SizedBox(height: 18),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.2,
+                  color: Colors.white.withOpacity(_isHovered ? 0.08 : 0.05),
+                  borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: _isHovered ? Colors.white.withOpacity(0.2) : Colors.white10,
+                      width: 0.5,
                     ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: widget.accent.withOpacity(_isHovered ? 0.22 : 0.16),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Icon(widget.icon, color: widget.accent, size: 26),
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      widget.title,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.2,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.caption,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                caption,
-                style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HoverButton extends StatefulWidget {
+  final VoidCallback? onPressed;
+  final bool isLoading;
+  final Widget child;
+
+  const _HoverButton({
+    required this.onPressed,
+    required this.isLoading,
+    required this.child,
+  });
+
+  @override
+  State<_HoverButton> createState() => _HoverButtonState();
+}
+
+class _HoverButtonState extends State<_HoverButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedScale(
+        scale: _isHovered && !widget.isLoading ? 1.05 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: (_isHovered ? colorScheme.primary : Colors.black)
+                    .withOpacity(0.5),
+                blurRadius: _isHovered ? 16 : 12,
+                offset: Offset(0, _isHovered ? 8 : 6),
               ),
             ],
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: ElevatedButton(
+            onPressed: widget.onPressed,
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+            child: widget.child,
           ),
         ),
       ),
@@ -569,42 +649,29 @@ class CtaSection extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final isStacked = constraints.maxWidth < 640;
-              final field = TextFormField(
-                controller: emailController,
-                validator: validateEmail,
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-                decoration: const InputDecoration(
-                  hintText: 'Enter your email',
-                ),
-              );
+                final field = TextFormField(
+                  controller: emailController,
+                  validator: validateEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your email',
+                  ),
+                );
 
-                final button = DecoratedBox(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6), // Only shows the shadow below the button
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : onJoinWaitlist,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                          )
-                        : const Text('Join Waitlist'),
-                  ),
+                final button = _HoverButton(
+                  onPressed: isLoading ? null : onJoinWaitlist,
+                  isLoading: isLoading,
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('Join Waitlist'),
                 );
 
                 if (isStacked) {
