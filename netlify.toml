@@ -1,8 +1,13 @@
 [build]
   publish = "build/web"
-  command = ""  # no build command since we already built locally
+  command = ""  # Already built locally
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "max-age=31536000"
